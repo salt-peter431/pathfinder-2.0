@@ -14,8 +14,6 @@ The system focuses on:
 - **Orders**: Complex job building with variables (e.g., paper type, cutting, padding), pricing, and cloning for reorders (~150 orders/500 items per month; ~12,000 items total in DB).
 - **Documents**: Auto-generated PDFs for invoices, job tickets, labels, POs, and packing lists using libraries like FPDF or TCPDF.
 
-Hosted at [https://pfdr.prideprinting.ink/](https://pfdr.prideprinting.ink/) behind Cloudflare Access (restricted to Google Workspace users). Production uses Hostinger; development is local via XAMPP.
-
 ## Features
 
 - **Dashboard**: Sortable/searchable table of active orders with actions (print, status update, edit).
@@ -68,10 +66,6 @@ No contributions accepted at this time (solo project). For questions, open an is
 
 MIT License—see [LICENSE](LICENSE) file. (Personal use encouraged for learning.)
 
-## Author
-
-- **Jason** (salt-peter431) – Pride Printing
-- Contact: Via GitHub issues or prideprinting.ink
 
 ---
 
