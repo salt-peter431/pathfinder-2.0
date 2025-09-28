@@ -28,7 +28,10 @@ jobs:
 
       - name: Create JSON status file
         run: |
-          echo '{"status": "${{ steps.activity.outputs.status }}", "message": "${{ steps.activity.outputs.message }}"}' > status.json
+          echo '{"status": "${{ steps.activity.outputs.status }}", "message": "${{ steps.activity.outputs.message }}", "color": ${{ steps.activity.outputs.status == 'active' && 'brightgreen' || 'red' }}}' > status.json
+
+      - name: Pull remote changes
+        run: git pull --rebase origin main
 
       - name: Commit and push JSON
         uses: stefanzweifel/git-auto-commit-action@v5
