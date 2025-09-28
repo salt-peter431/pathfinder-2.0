@@ -3,7 +3,7 @@
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-blue)](https://www.php.net/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-yellow)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-green?logo=github)](https://github.com/salt-peter431/pfdr)
-
+[![Maintenance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/salt-peter431/pfdr/main/status.json&style=flat&label=Maintenance&message=${json:$.status}&color=${json:$.status=="active"?"brightgreen":"red"})](https://github.com/salt-peter431/pfdr)
 ## Overview
 
 Pathfinder 2.0 is a modernized rebuild of a custom order management system (OMS) originally developed in 2019 for Pride Printing, a small printing business. The original Pathfinder handled customer data, order tracking, and document generation for print jobs. This version addresses legacy code issues, improving security, efficiency, and maintainability while preserving core functionality.
