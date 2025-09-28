@@ -140,5 +140,8 @@ vite.config.ts.timestamp-*
 
 # Debugbar
 writable/debugbar/
+writeable/cache/
+writable/uploads/
+writable/session/
 storage/framework/cache/data/
 storage/logs/
