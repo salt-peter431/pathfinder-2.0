@@ -1,0 +1,36 @@
+name: Update Maintenance Status
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Daily at midnight UTC
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  update-status:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check repo activity
+        id: activity
+        run: |
+          LAST_COMMIT=$(git log -1 --format="%ct")
+          DAYS_SINCE=$(($(date +%s)/86400 - $LAST_COMMIT/86400))
+          if [ $DAYS_SINCE -gt 30 ]; then
+            echo "status=maintenance" >> $GITHUB_OUTPUT
+            echo "message=Inactive - No updates in 30+ days" >> $GITHUB_OUTPUT
+          else
+            echo "status=active" >> $GITHUB_OUTPUT
+            echo "message=Up to date" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create JSON status file
+        run: |
+          echo '{"status": "${{ steps.activity.outputs.status }}", "message": "${{ steps.activity.outputs.message }}"}' > status.json
+
+      - name: Commit and push JSON
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          file_pattern: status.json
+          commit_message: "Update maintenance status [skip ci]"
+          branch: main
