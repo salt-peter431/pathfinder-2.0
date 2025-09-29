@@ -1,1 +1,6 @@
-{"status": "active", "message": "Up to date", "color": "brightgreen"}
+{
+  "schemaVersion": 1,
+  "label": "Maintenance",
+  "message": "Up to date",
+  "color": "brightgreen"
+}
