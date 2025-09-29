@@ -3,71 +3,77 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-use CodeIgniter\HTTP\IncomingRequest;  // For IP 
+
 
 class UserModel extends Model
 {
-    protected $table = 'users';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['username', 'email', 'friendly_name', 'password', 'role', 'token'];
+    protected $DBGroup          = 'default';
+    protected $table            = 'users';
+    protected $primaryKey       = 'user_id';
+    protected $useAutoIncrement = true;
+    protected $insertID         = 0;
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = false;
+    protected $protectFields    = true;
+    protected $allowedFields    = ['user_name', 'user_email', 'user_friendly_name', 'user_password', 'user_role', 'user_status', 'token', 'user_login'];
+
+    // Timestamps
     protected $useTimestamps = true;
-    protected $createdField = 'created_at';
-    protected $updatedField = 'updated_at';
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'user_created';
+    protected $updatedField  = 'user_updated';
+    protected $deletedField  = 'deleted_at';
 
-    protected $beforeInsert = ['hashPassword'];
-    protected $beforeUpdate = ['hashPassword'];
+    // Validation
+    protected $validationRules      = [];
+    protected $validationMessages   = [];
+    protected $skipValidation       = false;
+    protected $cleanValidationRules = true;
 
+    // Callbacks
+    protected $allowCallbacks = true;
+    protected $beforeInsert   = ['hashPassword'];
+    protected $afterInsert    = [];
+    protected $beforeUpdate   = ['hashPassword'];
+    protected $afterUpdate    = [];
+    protected $afterFind      = [];
+    protected $afterDelete    = [];
+
+    /**
+     * Hash password before insert/update
+     */
     protected function hashPassword(array $data)
     {
-        if (!isset($data['data']['password'])) {
-            return $data;
+        if (isset($data['data']['user_password'])) {
+            $data['data']['user_password'] = password_hash($data['data']['user_password'], PASSWORD_DEFAULT);
         }
-        $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
+
         return $data;
     }
 
-    /**
-     * Find user by email or username and verify password
-     */
-    
-    public function findUserByCredentials($identifier, $password)
+/**
+ * Find user by credentials (username or email), verify password, update login timestamp
+ */
+public function findUserByCredentials($identifier, $password)
 {
-    $db = \Config\Database::connect();
-    $builder = $db->table('users');
-    $builder->select('id, username, email, password, friendly_name, role');
-    $builder->where('username', $identifier);
-    $builder->orWhere('email', $identifier);
-    $query = $builder->get();
-    $user = $query->getRowArray();
+    $builder = $this->builder();
+    $builder->where('user_status', 'active')
+            ->groupStart()
+            ->where('user_name', $identifier)
+            ->orWhere('user_email', $identifier)
+            ->groupEnd();
 
-    if (!$user || !password_verify($password, $user['password'])) {
-        // Throttle logic
-        $session = session();
-        $ip = service('request')->getIPAddress();  // Gets real IP (handles proxies)
-        $key = 'login_attempts_' . md5($ip);
-        $attempts = (int)($session->get($key) ?? 0);
-        $timeKey = $key . '_time';
-        $lastAttempt = $session->get($timeKey);
+    $user = $builder->get()->getRowArray();
 
-        if ($lastAttempt && (time() - $lastAttempt) < 900) {  // 15 mins window
-            $session->set($key, $attempts + 1);
-            if ($attempts >= 4) {  // 5th fail locks for 15 mins
-                return ['error' => 'Too many failed attempts. Try again in 15 minutes.'];
-            }
-        } else {
-            $session->set($key, 1);
-            $session->set($timeKey, time());
-        }
+    if (!$user || !password_verify($password, $user['user_password'])) {
         return false;
     }
 
-    // Success: Reset attempts
-    $session = session();
-    $ip = service('request')->getIPAddress();
-    $key = 'login_attempts_' . md5($ip);
-    $session->remove($key);
-    $session->remove($key . '_time');
+    // Update last login timestamp
+    $this->update($user['user_id'], ['user_login' => date('Y-m-d H:i:s')]);
 
+    // Return user array (exclude password for security)
+    unset($user['user_password']);    
     return $user;
 }
 }

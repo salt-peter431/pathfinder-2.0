@@ -113,12 +113,20 @@ public function login(){
             }
 
             if (!$user) {
-                session()->setFlashdata('error', 'Username or Password don\'t match.');
-                return redirect()->to('/auth-login');
-            }
-            
-            $this->setUserSession($user);				
-            return redirect()->to('/');
+    			session()->setFlashdata('error', 'Username or Password don\'t match.');
+    			return redirect()->to('/auth-login');
+			}
+// Remap prefixed keys for session compatibility (TODO: Refactor app-wide later)
+		$sessionData = [
+    		'id' => $user['user_id'],
+    		'username' => $user['user_name'],
+    		'email' => $user['user_email'],
+			'friendly_name' => $user['user_friendly_name'],
+
+// Add more as needed, e.g., 'friendly_name' => $user['user_friendly_name']
+				];
+			$this->setUserSession($sessionData);
+			return redirect()->to('/');
         }
     }		
 }
