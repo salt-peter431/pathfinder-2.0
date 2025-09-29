@@ -145,3 +145,4 @@ writable/uploads/
 writable/session/
 storage/framework/cache/data/
 storage/logs/
+vendor/
