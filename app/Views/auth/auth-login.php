@@ -20,11 +20,11 @@
                                 <div class="col-7">
                                     <div class="text-primary p-4">
                                         <h5 class="text-primary">Welcome Back !</h5>
-                                        <p>Sign in to continue to Skote.</p>
+                                        <p>Sign in to continue to Pathfinder.</p>
                                     </div>
                                 </div>
                                 <div class="col-5 align-self-end">
-                                    <img src="assets/images/profile-img.png" alt="" class="img-fluid">
+                                    <img src="assets/images/profile-img.png" alt="" class="img-fluid" style="margin: 2px;">
                                 </div>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                                         <button class="btn btn-primary waves-effect waves-light" type="submit">Log In</button>
                                     </div>
 
-                                    <div class="mt-4 text-center">
+                                    <!-- <div class="mt-4 text-center">
                                         <h5 class="font-size-14 mb-3">Sign in with</h5>
 
                                         <ul class="list-inline">
@@ -104,7 +104,7 @@
                                                 </a>
                                             </li>
                                         </ul>
-                                    </div>
+                                    </div> -->
 
                                     <div class="mt-4 text-center">
                                         <a href="auth-recoverpw" class="text-muted"><i class="mdi mdi-lock me-1"></i> Forgot your password?</a>
@@ -120,7 +120,7 @@
                             <p>Don't have an account ? <a href="auth-register" class="fw-medium text-primary"> Signup now </a> </p>
                             <p>© <script>
                                     document.write(new Date().getFullYear())
-                                </script> Skote. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+                                </script>
                         </div>
                     </div>
 
