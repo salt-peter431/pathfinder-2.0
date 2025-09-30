@@ -5,19 +5,19 @@
             <div class="navbar-brand-box">
                 <a href="/" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="assets/images/logo.svg" alt="" height="22">
+                        <img src="assets/images/logo.svg" alt="" height="75%">
                     </span>
                     <span class="logo-lg">
-                        <img src="assets/images/logo-dark.png" alt="" height="17">
+                        <img src="assets/images/pathfindertextwhite.svg" alt="" height="75%">
                     </span>
                 </a>
 
                 <a href="/" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="assets/images/logo-light.svg" alt="" height="22">
+                        <img src="assets/images/logo-light.svg" alt="" height="75%">
                     </span>
                     <span class="logo-lg">
-                        <img src="assets/images/logo-light.png" alt="" height="19">
+                        <img src="assets/images/pathfindertextwhite.svg" alt="" height="75%">
                     </span>
                 </a>
             </div>
@@ -300,7 +300,7 @@
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="bx bx-bell"></i>
-                    <span class="badge bg-success rounded-pill">0</span>
+                    <!-- <span class="badge bg-success rounded-pill">0</span> -->
                 </button>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-notifications-dropdown">
                     <div class="p-3">

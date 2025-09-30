@@ -5,7 +5,7 @@
  */
 
 return [
-    'Skote' => 'Skote',
+    'Skote' => 'Pathfinder',
     'Welcome Back' => 'Welcome Back',
     'Dashboard' => 'Dashboard', 
     'Dashboards' => 'Dashboards', 
