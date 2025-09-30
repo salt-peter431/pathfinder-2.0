@@ -7,12 +7,12 @@
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
-                <li class="menu-title" key="t-menu"><?= lang('Files.Menu') ?></li>
+                <li class="menu-title" key="t-menu">Menu</li>
 
                 <li>
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-home-circle"></i>
-                        <span key="t-dashboards"><?= lang('Files.Dashboards') ?></span>
+                        <span>Dashboards</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="/orders.php" >Orders</a></li>
