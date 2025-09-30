@@ -52,7 +52,7 @@
                                         </div>
                                     <?php } ?>
                                         
-                                    <div class="mb-3">
+                                    <div class="mb-3"> <!-- Added for username field --->
                                         <label for="username" class="form-label">Username</label>
                                         <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" value="<?= set_value('username') ?>">
                                     </div>
@@ -61,8 +61,18 @@
                                             <?= $validation->getError('username'); ?>
                                         </div>
                                     <?php } ?>
+                                    
+                                    <div class="mb-3"> <!-- Added for friendly name field --->
+                                        <label for="user_friendly_name" class="form-label">Display Name</label>
+                                        <input type="text" class="form-control" id="user_friendly_name" placeholder="Will be displayed accross the app" name="user_friendly_name" value="<?= set_value('user_friendly_name') ?>">
+                                    </div>
+                                    <?php if(isset($validation) && $validation->hasError('user_friendly_name')){ ?>
+                                        <div class="alert alert-danger" role="alert">
+                                        <?= $validation->getError('user_friendly_name'); ?>
+                                        </div>
+                                    <?php } ?>
 
-                                    <div class="mb-3">
+                                    <div class="mb-3"> <!-- Added for password field --->
                                         <label for="userpassword" class="form-label">Password</label>
                                         <input type="password" class="form-control" id="userpassword" placeholder="Enter password" name="userpassword" value="">
                                     </div>

@@ -37,6 +37,7 @@ class AuthController extends BaseController
 				'username' => 'required|min_length[3]|max_length[50]|is_unique[users.user_name]',
 				'userpassword' => 'required|min_length[8]|max_length[50]',
 				'userpassword_confirm' => 'matches[userpassword]',
+				'user_friendly_name' => 'required|min_length[2]|max_length[50]',
 			];
 
 			$errors = [
@@ -57,7 +58,7 @@ class AuthController extends BaseController
 				$userData = [
 					'user_name' => $this->request->getVar('username'),
 					'user_email' => $this->request->getVar('useremail'),
-					'user_friendly_name' => $this->request->getVar('username'),  // Defaults to username; add form field later if needed
+					'user_friendly_name' => $this->request->getVar('user_friendly_name'), 
 					'user_password' => $this->request->getVar('userpassword'),  // Hashes via model callback
 					'user_role' => 'user',  // Default for new users
 					'user_status' => 'active',  // Default active
