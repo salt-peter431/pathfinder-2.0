@@ -21,7 +21,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="waves-effect">
-                        <span class="badge rounded-pill bg-danger float-end" key="t-hot"><?= lang('Hot') ?></span>
+                        <span class="badge rounded-pill bg-success float-end" key="t-hot"><?= lang('New') ?></span>
                         <i class="bx bx-layout"></i>
                         <span key="t-layouts"><?= lang('Files.Layouts') ?></span>
                     </a>

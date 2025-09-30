@@ -20,8 +20,8 @@
                             <div class="row">
                                 <div class="col-7">
                                     <div class="text-primary p-4">
-                                        <h5 class="text-primary">Free Register</h5>
-                                        <p>Get your free Skote account now.</p>
+                                        <h5 class="text-primary">Registration</h5>
+                                        <p>Must use an Organization email address.</p>
                                     </div>
                                 </div>
                                 <div class="col-5 align-self-end">
@@ -34,7 +34,7 @@
                                 <a href="/">
                                     <div class="avatar-md profile-user-wid mb-4">
                                         <span class="avatar-title rounded-circle bg-light">
-                                            <img src="assets/images/logo.svg" alt="" class="rounded-circle" height="34">
+                                            <img src="assets/images/locally.svg" alt="" class="rounded-circle" height="98%%">
                                         </span>
                                     </div>
                                 </a>
@@ -87,7 +87,7 @@
                                         <button class="btn btn-primary waves-effect waves-light" type="submit">Register</button>
                                     </div>
 
-                                    <div class="mt-4 text-center">
+                                    <!-- <div class="mt-4 text-center">
                                         <h5 class="font-size-14 mb-3">Sign up using</h5>
 
                                         <ul class="list-inline">
@@ -107,10 +107,10 @@
                                                 </a>
                                             </li>
                                         </ul>
-                                    </div>
+                                    </div> -->
 
                                     <div class="mt-4 text-center">
-                                        <p class="mb-0">By registering you agree to the Skote <a href="#" class="text-primary">Terms of Use</a></p>
+                                        <!-- <p class="mb-0">By registering you agree to the Skote <a href="#" class="text-primary">Terms of Use</a></p> -->
                                     </div>
                                 </form>
                             </div>
@@ -123,7 +123,7 @@
                             <p>Already have an account ? <a href="auth-login" class="fw-medium text-primary"> Login</a> </p>
                             <p>© <script>
                                     document.write(new Date().getFullYear())
-                                </script> Skote. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+                                </script>
                         </div>
                     </div>
 
