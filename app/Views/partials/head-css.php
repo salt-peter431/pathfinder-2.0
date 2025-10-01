@@ -6,3 +6,4 @@
 <link href="<?= base_url('assets/css/app.min.css') ?>" id="app-style" rel="stylesheet" type="text/css" />
 <!-- App js -->
 <script src="<?= base_url('assets/js/plugin.js') ?>"></script>
+<link href="<?= base_url('assets/libs/bootstrap-editable/css/bootstrap-editable.css') ?>" rel="stylesheet" type="text/css" />

@@ -1,21 +1,26 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-bs-theme="light" data-topbar="dark" data-layout="vertical" data-sidebar-size="lg" data-sidebar="dark" data-layout-mode="default" data-layout-style="default">
 <head>
-    <?= $title_meta ?? '' ?>  <!-- Assuming you have a variable for title/meta -->
-    <?= $this->include('partials/head-css') ?>  <!-- Include any head partials if they exist -->
+    <?= $title_meta ?? '' ?>
+    <?= $this->include('partials/head-css') ?>
 </head>
 <body>
-    <?= $this->include('partials/topbar') ?>  <!-- Your topbar.php -->
-    <?= $this->include('partials/sidebar') ?>  <!-- Your sidebar.php -->
-    <div class="main-content">
-        <div class="page-content">
-            <div class="container-fluid">
-                <?= $this->renderSection('content') ?>  <!-- This is where dynamic page content loads -->
+    <?= $this->include('partials/body') ?>
+    <div id="layout-wrapper">
+        <?= $this->include('partials/menu') ?>  <!-- Sidebar -->
+        <div class="main-content">
+            <?= $this->include('partials/topbar') ?>  <!-- Topbar (header) -->
+            <div class="page-content">
+                <div class="container-fluid">
+                    <?= $page_title ?? '' ?>  <!-- Page header (e.g., "Profile / Pages") -->
+                    <?= $this->renderSection('content') ?>  <!-- Dynamic page content -->
+                </div>
             </div>
+            <?= $this->include('partials/footer') ?>  <!-- Footer inside main-content -->
         </div>
-        <?= $this->include('partials/footer') ?>  <!-- Your footer.php -->
     </div>
-    <?= $this->include('partials/vendor-scripts') ?>  <!-- Include any script partials -->
+    <?= $this->include('partials/right-sidebar') ?>  <!-- Optional right sidebar -->
+    <?= $this->include('partials/vendor-scripts') ?>
     <script src="assets/js/app.js"></script>
 </body>
 </html>

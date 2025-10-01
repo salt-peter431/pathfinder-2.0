@@ -368,6 +368,37 @@ class AppController extends BaseController
 		return view('candidate-overview', $data);
 	}
 
+	public function profile()
+{
+    helper(['form']);
+    $data = [];
+
+    if ($this->request->getMethod() == 'get') {
+        // Get current user from session (assuming you set 'id', 'username', 'email' on login)
+        $userId = session()->get('id');
+        if (!$userId) {
+            return redirect()->to('auth-login')->with('error', 'Please log in first.');
+        }
+
+        $model = new \App\Models\UserModel();
+        $user = $model->find($userId);  // Fetches full user array
+
+        if (!$user) {
+            return redirect()->to('auth-login')->with('error', 'User not found.');
+        }
+
+        // Pass to view (exclude sensitive fields like password)
+        $data = [
+            'useremail' => $user['user_email'],
+            'user_friendly_name' => $user['user_friendly_name'],
+            'title_meta' => view('partials/title-meta', ['title' => 'Profile'])
+        ];
+
+        return view('profile', $data);
+    }
+
+    // POST handling comes in Step 2
+}
 
 	//--------------------------------------------------------------------
 

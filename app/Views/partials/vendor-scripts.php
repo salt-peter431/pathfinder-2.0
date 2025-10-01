@@ -4,3 +4,6 @@
 <script src="assets/libs/metismenu/metisMenu.min.js"></script>
 <script src="assets/libs/simplebar/simplebar.min.js"></script>
 <script src="assets/libs/node-waves/waves.min.js"></script>
+<script src="assets/libs/moment/min/moment.min.js"></script>
+<script src="assets/libs/bootstrap-editable/js/index.js"></script>
+<script src="assets/js/pages/form-xeditable.init.js"></script>

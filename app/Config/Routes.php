@@ -223,7 +223,7 @@ $routes->get('maps-leaflet', 'ComponentController::show_maps_leaflet');
  * --------------------------------------------------------------------
  * Created by me to override the default routing behavior.
  */
-$routes->get('profile', 'AuthController::profile', ['filter' => 'loginRequired']);  // for profile page
+$routes->get('profile', 'AppController::profile');
 
 /*
  * --------------------------------------------------------------------
