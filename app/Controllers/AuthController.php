@@ -169,117 +169,204 @@ class AuthController extends BaseController
 		return true;
 	}
 
-	/*
-	* User Authentication - Recover password 
-	* Validate and check exist email in local DB
-	* Send email on valid address with reset password link (unique per user)
-	*/
-	public function recoverpw()
-	{
-		helper(['form']);
-		$data = [];
+/*
+ * User Authentication - Recover password 
+ * Validate and check existing email in local DB
+ * Generate reset token, update DB, send email with reset link
+ */
+public function recoverpw()
+{
+    helper(['form']);
+    $data = [];
 
-		if ($this->request->getMethod() == 'get') {
-			$data = [
-				'title_meta' => view('partials/title-meta', ['title' => 'Recover Password'])
-			];
-			return view('auth/auth-recoverpw', $data);
-		}
+    if ($this->request->getMethod() == 'get') {
+        $data = [
+            'title_meta' => view('partials/title-meta', ['title' => 'Recover Password'])
+        ];
+        return view('auth/auth-recoverpw', $data);
+    }
 
-		if ($this->request->getMethod() == 'post') {
-			$rules = [
-				'useremail' => 'required|min_length[4]|max_length[50]|valid_email|validateEmail[useremail]',
-			];
+    if ($this->request->getMethod() == 'post') {
+        $rules = [
+            'useremail' => 'required|min_length[4]|max_length[100]|valid_email',  // Updated max_length to match DB; removed custom rule for now—add if needed below
+        ];
 
-			$errors = [
-				'useremail' => [
-					'validateEmail' => 'User email address doesn\'t exist.',
-				]
-			];
+        $errors = [
+            'useremail' => [
+                'required' => 'Email is required.',
+                'valid_email' => 'Please enter a valid email.',
+            ]
+        ];
 
-			if (!$this->validate($rules, $errors)) {
-				$data['validation'] = $this->validator;
-			} else {
-				//send email for reset password request
-				$model = new UserModel();
-				$user = $model->where('email', $this->request->getVar('useremail'))->first();
-				$token = $user['token'];
-				$link = base_url() . "/auth-updatepw?$token";	//create link for update password
+        if (!$this->validate($rules, $errors)) {
+            $data['validation'] = $this->validator;
+        } else {
+            // Find user by user_email (fixed field name)
+            $model = new UserModel();
+            $user = $model->where('user_email', $this->request->getVar('useremail'))->first();  // Changed from 'email' to 'user_email'
 
-				$data['result'] = $this->sendEmail($user['email'], $link);
-			}
-			$data['title_meta'] = view('partials/title-meta', ['title' => 'Recover Password']);
-			// print_r($data);
-			return view('auth/auth-recoverpw', $data);
-		}
-	}
+            if (!$user || $user['user_status'] !== 'active') {
+                // User not found/inactive: Show generic success to avoid leaking info
+                $data['result'] = 'success';
+            } else {
+                // Generate secure reset token (32 bytes, hex) and hash it for DB
+                $token = bin2hex(random_bytes(32));
+                $hashedToken = password_hash($token, PASSWORD_DEFAULT);
+
+                // Set expiry: 1 hour from now
+                $expiresAt = date('Y-m-d H:i:s', time() + 3600);
+
+				// DEBUG: Log vars to see if we reach here and what data looks like
+    			//log_message('debug', 'DEBUG: Updating user_id=' . $user['user_id'] . ', token=' . substr($hashedToken, 0, 10) . '...');
+    			//$updateData = [ 'reset_token' => $hashedToken, 'reset_expires_at' => $expiresAt ];
+    			//log_message('debug', 'DEBUG: Update data=' . print_r($updateData, true));
+
+                // Update DB with new fields
+                $model->update($user['user_id'], [
+                    'reset_token' => $hashedToken,
+                    'reset_expires_at' => $expiresAt,
+                ]);
+
+                // Build reset URL (we'll create the reset page next)
+                $resetUrl = base_url('auth-updatepw') . '?token=' . $token . '&email=' . urlencode($user['user_email']);
+
+                // Send email using our SMTP config
+                $email = service('email');
+                $email->setFrom('service@prideprinting.ink', 'Pathfinder App');
+                $email->setTo($user['user_email']);
+                $email->setSubject('Pathfinder Password Reset Request');
+                $email->setMessage("Hi {$user['user_friendly_name']},\n\nYou requested a password reset. Click here to set a new one: {$resetUrl}\n\nThis link expires in 1 hour. If you didn't request this, ignore it.\n\nBest,\nPride Printing Team");
+                $email->setMailType('text');
+
+                if ($email->send()) {
+                    $data['result'] = 'success';
+                } else {
+                    // Email failed: Log for debug, show error state (add <div class="alert alert-danger"> in view if $result == 'error')
+                    log_message('error', 'Password reset email failed for ' . $user['user_email'] . ': ' . $email->printDebugger(['headers']));
+                    $data['result'] = 'error';
+                }
+            }
+        }
+        $data['title_meta'] = view('partials/title-meta', ['title' => 'Recover Password']);
+        return view('auth/auth-recoverpw', $data);
+    }
+}
 
 	/*
 	* User Authentication - Update password
 	* Check if user token is valid or not
 	* Only valid email and token user, password will be updated
 	*/
-	public function updatepw()
-	{
-		helper(['form', 'text']);
-		$data = [];
+	/*
+ * User Authentication - Update password 
+ * Validate token/email, allow new password set, clear token on success
+ */
+/*
+ * User Authentication - Update password 
+ * Validate token/email, allow new password set, clear token on success
+ */
+/*
+ * User Authentication - Update password 
+ * Validate token/email, allow new password set, clear token on success
+ */
+public function updatepw()
+{
+    helper(['form']);
+    $data = [];
 
-		if ($this->request->getMethod() == 'get') {
-			$data = [
-				'title_meta' => view('partials/title-meta', ['title' => 'Reset Password'])
-			];
+    // Temp DEBUG: Echo to confirm method is hit
+    //echo '<div class="alert alert-info">DEBUG: updatepw() method hit! Token: ' . ($this->request->getGet('token') ?? 'missing') . '</div>';  // Remove after test
 
-			//check if user has valid token
-			$params = $this->request->getVar();
-			$token = key($params);
+    if ($this->request->getMethod() == 'get') {
+        $token = $this->request->getGet('token');
+        $useremail = $this->request->getGet('email');
 
-			$model = new UserModel();
-			$user = $model->where('token', $token)->first();
-			if (!$user) {
-				$data['result'] = 'invalid';
-			} else {
-				$data['useremail'] = $user['email'];
-			}
-			return view('auth/auth-updatepw', $data);
-		}
+        if (empty($token) || empty($useremail)) {
+            return redirect()->to('auth-recoverpw')->with('error', 'Invalid reset link.');
+        }
 
-		if ($this->request->getMethod() == 'post') {
-			$rules = [
-				'userpassword' => 'required|min_length[4]|max_length[50]',
-				'userpassword_confirm' => 'matches[userpassword]',
-			];
+        $model = new \App\Models\UserModel();
+        $user = $model->where('user_email', $useremail)->first();
 
-			$errors = [
-				'userpassword' => [
-					'required' => 'The Password is required.'
-				],
-				'userpassword_confirm' => [
-					'matches' => 'The Password and Confirm Password don\'t match.'
-				]
-			];
+        if (!$user || $user['user_status'] !== 'active') {
+            return redirect()->to('auth-recoverpw')->with('error', 'User not found.');
+        }
 
-			if (!$this->validate($rules, $errors)) {
-				$data['validation'] = $this->validator;
-				$data['title_meta'] = view('partials/title-meta', ['title' => 'Reset Password']);
-				$data['useremail'] =  $this->request->getVar('useremail');
-			} else {
-				//send email 
-				$model = new UserModel();
-				$updateData = [
-					'password' => $this->request->getVar('userpassword'),
-					'token' => random_string('alnum', 16)
-				];
-				$model->where('email', $this->request->getVar('useremail'))
-					->set($updateData)
-					->update();
+        if (empty($user['reset_token']) || !password_verify($token, $user['reset_token'])) {
+            return redirect()->to('auth-recoverpw')->with('error', 'Invalid token.');
+        }
 
-				$data['result'] = 'success';
-				$data['title_meta'] = view('partials/title-meta', ['title' => 'Reset Password']);
-				$data['useremail'] =  $this->request->getVar('useremail');
-			}
-			return view('auth/auth-updatepw', $data);
-		}
-	}
+        if (strtotime($user['reset_expires_at']) < time()) {
+            $model->update($user['user_id'], ['reset_token' => null, 'reset_expires_at' => null]);
+            return redirect()->to('auth-recoverpw')->with('error', 'Reset link expired.');
+        }
+
+        // Valid: Pass to view
+        $data['useremail'] = $useremail;
+		$data['token'] = $token;  // Already added for hidden field
+		$data['title_meta'] = view('partials/title-meta', ['title' => 'Update Password']);
+		return view('auth/auth-updatepw', $data);
+    }
+
+    // POST: Process new password
+    if ($this->request->getMethod() == 'post') {
+        $token = $this->request->getPost('token') ?? $this->request->getGet('token');  // Grab from hidden input or GET
+        $useremail = $this->request->getPost('useremail') ?? $this->request->getGet('email');
+        $newPassword = $this->request->getPost('userpassword');
+        $confirmPassword = $this->request->getPost('userpassword_confirm');
+
+        // Validate
+        $rules = [
+            'userpassword' => 'required|min_length[8]|max_length[255]',
+            'userpassword_confirm' => 'required|matches[userpassword]',
+        ];
+        $errors = [
+            'userpassword' => [
+                'required' => 'New password is required.',
+                'min_length' => 'Password must be at least 8 characters.',
+            ],
+            'userpassword_confirm' => [
+                'required' => 'Please confirm your password.',
+                'matches' => 'Passwords do not match.',
+            ],
+        ];
+
+        if (!$this->validate($rules, $errors)) {
+            // Validation failed: Re-display form with errors (re-validate token too)
+            $data['validation'] = $this->validator;
+            $data['useremail'] = $useremail;
+			$data['token'] = $token;
+            $data['title_meta'] = view('partials/title-meta', ['title' => 'Update Password']);
+            return view('auth/auth-updatepw', $data);
+        }
+
+        // Re-find user and re-validate token (for security on POST)
+        $model = new \App\Models\UserModel();
+        $user = $model->where('user_email', $useremail)->first();
+
+        if (!$user || empty($user['reset_token']) || !password_verify($token, $user['reset_token']) || strtotime($user['reset_expires_at']) < time()) {
+            return redirect()->to('auth-recoverpw')->with('error', 'Invalid or expired reset link.');
+        }
+
+        // Hash and update password
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $model->update($user['user_id'], [
+            'user_password' => $hashedPassword,
+            'reset_token' => null,
+            'reset_expires_at' => null,
+        ]);
+
+        // Success: Show in view (or redirect to login)
+        $data['result'] = 'success';
+		$data['useremail'] = $useremail;
+		$data['token'] = $token;
+        $data['title_meta'] = view('partials/title-meta', ['title' => 'Password Updated']);
+
+		// TEMP DEBUG: Confirm vars before render
+		echo '<div class="alert alert-warning text-center mb-4" style="position: fixed; top: 10px; right: 10px; z-index: 9999;">DEBUG: useremail = "' . ($useremail ?? 'UNDEFINED') . '" | data[useremail] = "' . ($data['useremail'] ?? 'MISSING') . '"</div>';
+        return view('auth/auth-updatepw', $data);
+    }
+}
 
 
 	/*

@@ -32,19 +32,19 @@ class Filters extends BaseConfig
      * applied before and after every request.
      */
     public array $globals = [
-        'before' => [
-            // 'honeypot',
-            'csrf' => ['except' => []],
-            'loginRequired' => ['except' => ['auth-login', 'auth-register']],  // Protects all except public auth pages
-            // 'invalidchars',
-        ],
-        'after' => [
-            'toolbar',
-            'securityHeaders' => ['except' => []],
-            // 'honeypot',
-            // 'secureheaders',
-        ],
-    ];
+    'before' => [
+        // 'honeypot',
+        'csrf' => ['except' => []],
+        'loginRequired' => ['except' => ['auth-login', 'auth-register', 'auth-recoverpw', 'auth-updatepw']],  // Add the two new ones here
+        // 'invalidchars',
+    ],
+    'after' => [
+        'toolbar',
+        'securityHeaders' => ['except' => []],
+        // 'honeypot',
+        // 'secureheaders',
+    ],
+];
 
     /**
      * List of filter aliases that works on a

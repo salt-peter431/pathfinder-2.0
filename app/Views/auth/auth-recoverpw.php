@@ -48,7 +48,7 @@
                                         }
                                     ?>
                                 </div>
-                                <?= form_open('auth-forgot-password', ['class' => 'form-horizontal']) ?>  <!-- Updated action to our route -->
+                                <?= form_open('auth-recoverpw', ['class' => 'form-horizontal']) ?>
 
                                     <div class="mb-3">
                                         <label for="useremail" class="form-label">Email</label>

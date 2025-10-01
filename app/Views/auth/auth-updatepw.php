@@ -59,6 +59,7 @@
                                     <div class="mb-3">
                                         <label for="useremail">Email</label>
                                         <input type="email" class="form-control" id="useremail" placeholder="Enter email" name="useremail" value="<?= $useremail ?>" readonly>
+                                        <input type="hidden" name="token" value="<?= $token ?>">
                                     </div>
 
                                     <div class="mb-3">

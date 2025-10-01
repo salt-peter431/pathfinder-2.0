@@ -41,7 +41,7 @@
                                 <a href="/" class="auth-logo-dark">
                                     <div class="avatar-md profile-user-wid mb-4">
                                         <span class="avatar-title rounded-circle bg-light">
-                                            <img src="assets/images/logo.svg" alt="" class="rounded-circle" height="34">
+                                            <img src="assets/images/locally.svg" alt="" class="rounded-circle" height="98%">
                                         </span>
                                     </div>
                                 </a>
@@ -107,7 +107,7 @@
                                     </div> -->
 
                                     <div class="mt-4 text-center">
-                                        <a href="auth-recoverpw" class="text-muted"><i class="mdi mdi-lock me-1"></i> Forgot your password?</a>
+                                        <a href="<?= site_url('auth-recoverpw') ?>" class="text-muted"><i class="mdi mdi-lock me-1"></i> Forgot your password?</a>
                                     </div>
                                 </form>
                             </div>
