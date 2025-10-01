@@ -49,6 +49,8 @@ class AuthController extends BaseController
 				]
 			];
 
+			$data['title_meta'] = view('partials/title-meta', ['title' => 'Register']);  // Add this: Ensure title is always set for re-render
+
 			if (!$this->validate($rules, $errors)) {
 				$data['validation'] = $this->validator;
 			} else {
@@ -58,7 +60,7 @@ class AuthController extends BaseController
 				$userData = [
 					'user_name' => $this->request->getVar('username'),
 					'user_email' => $this->request->getVar('useremail'),
-					'user_friendly_name' => $this->request->getVar('user_friendly_name'), 
+					'user_friendly_name' => $this->request->getVar('user_friendly_name'),
 					'user_password' => $this->request->getVar('userpassword'),  // Hashes via model callback
 					'user_role' => 'user',  // Default for new users
 					'user_status' => 'active',  // Default active
@@ -78,8 +80,9 @@ class AuthController extends BaseController
 					// Handle insert fail (e.g., DB error)
 					session()->setFlashdata('error', 'Registration failed. Please try again.');
 				}
-				return view('auth/auth-register', $data);
 			}
+			// Always return the view on POST (with errors, repopulated fields, or flashdata)
+			return view('auth/auth-register', $data);
 		}
 	}
 	/*

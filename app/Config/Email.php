@@ -6,8 +6,8 @@ use CodeIgniter\Config\BaseConfig;
 
 class Email extends BaseConfig
 {
-    public string $fromEmail  = '';
-    public string $fromName   = '';
+    public string $fromEmail  = 'service@prideprinting.ink';
+    public string $fromName   = 'Pathfinder App';
     public string $recipients = '';
 
     /**
@@ -18,7 +18,7 @@ class Email extends BaseConfig
     /**
      * The mail sending protocol: mail, sendmail, smtp
      */
-    public string $protocol = 'mail';
+    public string $protocol = 'smtp';
 
     /**
      * The server path to Sendmail.
@@ -28,7 +28,7 @@ class Email extends BaseConfig
     /**
      * SMTP Server Address
      */
-    public string $SMTPHost = '';
+    public string $SMTPHost = '';  // Empty; will be overridden by .env
 
     /**
      * SMTP Username
@@ -43,7 +43,7 @@ class Email extends BaseConfig
     /**
      * SMTP Port
      */
-    public int $SMTPPort = 25;
+    public int $SMTPPort = 587;  // Default fallback
 
     /**
      * SMTP Timeout (in seconds)
@@ -58,8 +58,13 @@ class Email extends BaseConfig
     /**
      * SMTP Encryption. Either tls or ssl
      */
-    public string $SMTPCrypto = 'tls';
+    public string $SMTPCrypto = '';  // Empty; will be overridden by .env
 
+    /**
+    * SMTP Authentication
+    */
+    public bool $SMTPAuth = true;
+    
     /**
      * Enable word-wrap
      */
