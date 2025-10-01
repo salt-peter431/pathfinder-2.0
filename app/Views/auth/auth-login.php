@@ -47,6 +47,19 @@
                                 </a>
                             </div>
                             <div class="p-2">
+                                <!--Success message after password reset-->
+                                <?php if ($success = session()->getFlashdata('success')) { ?>
+                                    <div class="alert alert-success text-center mb-4" role="alert">
+                                        <?= esc($success) ?>
+                                    </div>
+                                <?php } ?>
+
+                                <?php if ($error = session()->getFlashdata('error')) { ?>
+                                    <div class="alert alert-danger text-center mb-4" role="alert">
+                                        <?= esc($error) ?>
+                                    </div>
+                                <?php } ?>
+                                <!--Start Form-->
                                 <form class="form-horizontal" method="post" action="auth-login">
                                     <?= csrf_field() ?>
                                     <?php if ($error = session()->getFlashdata('error')): ?> <div class="alert alert-danger"><?= esc($error) ?></div> <?php endif; ?>
