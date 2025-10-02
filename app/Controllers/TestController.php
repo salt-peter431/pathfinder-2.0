@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController; // This assumes BaseController.php exists in app/Controllers/; if not, change to use CodeIgniter\Controller;
+use App\Controllers\BaseController;
 
 class TestController extends BaseController
 {
