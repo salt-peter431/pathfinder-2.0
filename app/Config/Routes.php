@@ -224,7 +224,7 @@ $routes->get('maps-leaflet', 'ComponentController::show_maps_leaflet');
  * Created by me to override the default routing behavior.
  */
 $routes->get('profile', 'AppController::profile');
-$routes->match(['get', 'post'], 'settings', 'Settings::index', ['filter' => 'loginRequired']); // User settings route protected by login filter
+$routes->match(['get', 'post'], 'settings', [\App\Controllers\SettingsController::class, 'index'], ['filter' => 'loginRequired']); // User settings route protected by login filter
 /*
  * --------------------------------------------------------------------
  * Additional Routing
