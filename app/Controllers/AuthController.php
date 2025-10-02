@@ -18,141 +18,143 @@ class AuthController extends BaseController
 	* Password stores after converted in hash password
 	* Unique token generated - used for reset password functionality
 	*/
-	public function register()
-	{
+public function register()
+    {
+        helper(['form', 'text']);
+        $data = [];
 
-		helper(['form', 'text']);
-		$data = [];
-
-		if ($this->request->getMethod() == 'get') {
-			$data = [
-				'title_meta' => view('partials/title-meta', ['title' => 'Register'])
-			];
-			return view('auth/auth-register', $data);
-		}
-
-		if ($this->request->getMethod() == 'post') {
-			$rules = [
-				'useremail' => 'required|min_length[8]|max_length[50]|valid_email|is_unique[users.user_email]',
-				'username' => 'required|min_length[3]|max_length[50]|is_unique[users.user_name]',
-				'userpassword' => 'required|min_length[8]|max_length[50]',
-				'userpassword_confirm' => 'matches[userpassword]',
-				'user_friendly_name' => 'required|min_length[2]|max_length[50]',
-			];
-
-			$errors = [
-				'userpassword' => [
-					'required' => 'The Password is required.'
-				],
-				'userpassword_confirm' => [
-					'matches' => 'The Password and Confirm Password don\'t match.'
-				]
-			];
-
-			$data['title_meta'] = view('partials/title-meta', ['title' => 'Register']);  // Add this: Ensure title is always set for re-render
-
-			if (!$this->validate($rules, $errors)) {
-				$data['validation'] = $this->validator;
-			} else {
-				// ---- store details in database
-				$model = new UserModel();
-
-				$userData = [
-					'user_name' => $this->request->getVar('username'),
-					'user_email' => $this->request->getVar('useremail'),
-					'user_friendly_name' => $this->request->getVar('user_friendly_name'),
-					'user_password' => $this->request->getVar('userpassword'),  // Hashes via model callback
-					'user_role' => 'user',  // Default for new users
-					'user_status' => 'active',  // Default active
-					'token' => random_string('alnum', 16)
-				];
-				$id = $model->insert($userData);  // Use insert() for clarity; returns ID
-				if ($id) {
-					// Remap for session compatibility (TODO: Refactor app-wide later)
-					$sessionData = [
-						'id' => $id,
-						'username' => $userData['user_name'],
-						'email' => $userData['user_email']
-					];
-					$this->setUserSession($sessionData);
-					return redirect()->to('home');
-				} else {
-					// Handle insert fail (e.g., DB error)
-					session()->setFlashdata('error', 'Registration failed. Please try again.');
-				}
-			}
-			// Always return the view on POST (with errors, repopulated fields, or flashdata)
-			return view('auth/auth-register', $data);
-		}
-	}
-	/*
-	* User Authentication - Sign in process
-	* Validate User credentials 
-	*/
-public function login()
-{
-    helper(['form']);
-    $data = [];
-
-    if ($this->request->getMethod() == 'get') {
-        $data = [
-            'title_meta' => view('partials/title-meta', ['title' => 'Log in'])
-        ];
-        return view('auth/auth-login', $data);
-    }
-
-    if ($this->request->getMethod() == 'post') {
-        $rules = [
-            'username' => 'required|min_length[3]|max_length[50]|valid_email',
-            'userpassword' => 'required|min_length[8]'
-        ];
-
-        $errors = [
-            'username' => [
-                'required' => 'Username or email is required.',
-                'min_length' => 'Must be at least 3 characters.',
-                'max_length' => 'Cannot exceed 50 characters.',
-                'valid_email' => 'Please enter a valid email address.'
-            ],
-            'userpassword' => [
-                'required' => 'Password is required.',
-                'min_length' => 'Password must be at least 8 characters.'
-            ]
-        ];
-
-        if (!$this->validate($rules, $errors)) {
-            $data['validation'] = $this->validator;
-            $data['title_meta'] = view('partials/title-meta', ['title' => 'Log in']);
-            return view('auth/auth-login', $data);
-        } else {
-            $model = new \App\Models\UserModel();
-            $identifier = $this->request->getPost('username');
-            $password = $this->request->getPost('userpassword');
-            $user = $model->findUserByCredentials($identifier, $password);
-
-            if (is_array($user) && isset($user['error'])) {
-                session()->setFlashdata('error', $user['error']);
-                return redirect()->to('/auth-login');
-            }
-
-            if (!$user) {
-                session()->setFlashdata('error', 'Username or Password don\'t match.');
-                return redirect()->to('/auth-login');
-            }
-            // Remap prefixed keys for session compatibility (TODO: Refactor app-wide later)
-            $sessionData = [
-                'id' => $user['user_id'],
-                'username' => $user['user_name'],
-                'email' => $user['user_email'],
-                'friendly_name' => $user['user_friendly_name'] ?? $user['user_name'], // Added fallback to username if no friendly name
-
-                // Add more as needed, e.g., 'friendly_name' => $user['user_friendly_name']
+        if ($this->request->getMethod() == 'get') {
+            $data = [
+                'title_meta' => view('partials/title-meta', ['title' => 'Register'])
             ];
-            $this->setUserSession($sessionData);
-            return redirect()->to('/');
+            return view('auth/auth-register', $data);
+        }
+
+        if ($this->request->getMethod() == 'post') {
+            $rules = [
+                'useremail' => 'required|min_length[8]|max_length[50]|valid_email|is_unique[users.user_email]',
+                'username' => 'required|min_length[3]|max_length[50]|is_unique[users.user_name]',
+                'userpassword' => 'required|min_length[8]|max_length[50]',
+                'userpassword_confirm' => 'matches[userpassword]',
+                'user_friendly_name' => 'required|min_length[2]|max_length[50]',
+            ];
+
+            $errors = [
+                'userpassword' => [
+                    'required' => 'The Password is required.'
+                ],
+                'userpassword_confirm' => [
+                    'matches' => 'The Password and Confirm Password don\'t match.'
+                ]
+            ];
+
+            $data['title_meta'] = view('partials/title-meta', ['title' => 'Register']);
+
+            if (!$this->validate($rules, $errors)) {
+                $data['validation'] = $this->validator;
+            } else {
+                // ---- store details in database
+                $model = new UserModel();
+
+                $userData = [
+                    'user_name' => $this->request->getVar('username'),
+                    'user_email' => $this->request->getVar('useremail'),
+                    'user_friendly_name' => $this->request->getVar('user_friendly_name'),
+                    'user_password' => $this->request->getVar('userpassword'),  // Hashes via model callback
+                    'user_role' => 'user',  // Default for new users
+                    'user_status' => 'active',  // Default active
+                    'token' => random_string('alnum', 16)
+                ];
+                $id = $model->insert($userData);  // Use insert() for clarity; returns ID
+                if ($id) {
+                    // Remap for session compatibility (TODO: Refactor app-wide later)
+                    $sessionData = [
+                        'id' => $id,
+                        'username' => $userData['user_name'],
+                        'email' => $userData['user_email'],
+                        'friendly_name' => $userData['user_friendly_name']  // ADD THIS LINE
+                    ];
+                    $this->setUserSession($sessionData);
+                    return redirect()->to('home');
+                } else {
+                    // Handle insert fail (e.g., DB error)
+                    session()->setFlashdata('error', 'Registration failed. Please try again.');
+                }
+            }
+            // Always return the view on POST (with errors, repopulated fields, or flashdata)
+            return view('auth/auth-register', $data);
         }
     }
-}
+
+    /*
+    * User Authentication - Sign in process
+    * Validate User credentials 
+    */
+    public function login()
+    {
+        helper(['form']);
+        $data = [];
+
+        if ($this->request->getMethod() == 'get') {
+            $data = [
+                'title_meta' => view('partials/title-meta', ['title' => 'Log in'])
+            ];
+            return view('auth/auth-login', $data);
+        }
+
+        if ($this->request->getMethod() == 'post') {
+            $rules = [
+                'username' => 'required|min_length[3]|max_length[50]|valid_email',
+                'userpassword' => 'required|min_length[8]'
+            ];
+
+            $errors = [
+                'username' => [
+                    'required' => 'Username or email is required.',
+                    'min_length' => 'Must be at least 3 characters.',
+                    'max_length' => 'Cannot exceed 50 characters.',
+                    'valid_email' => 'Please enter a valid email address.'
+                ],
+                'userpassword' => [
+                    'required' => 'Password is required.',
+                    'min_length' => 'Password must be at least 8 characters.'
+                ]
+            ];
+
+            if (!$this->validate($rules, $errors)) {
+                $data['validation'] = $this->validator;
+                $data['title_meta'] = view('partials/title-meta', ['title' => 'Log in']);
+                return view('auth/auth-login', $data);
+            } else {
+                $model = new \App\Models\UserModel();
+                $identifier = $this->request->getPost('username');
+                $password = $this->request->getPost('userpassword');
+                $user = $model->findUserByCredentials($identifier, $password);
+                
+                // TODO: Uncomment only for debugging; remove in production
+                // dd($user);
+
+                if ($user && $user['user_status'] === 'active') {
+                    // Remap for session compatibility (TODO: Refactor app-wide later)
+                    $sessionData = [
+                        'id' => $user['user_id'],
+                        'username' => $user['user_name'],
+                        'email' => $user['user_email'],
+                        'friendly_name' => $user['user_friendly_name']  // ADD THIS LINE
+                    ];
+                    $this->setUserSession($sessionData);
+                    return redirect()->to('home');
+                } else {
+                    session()->setFlashdata('error', 'Invalid credentials or account inactive.');
+                    $data['title_meta'] = view('partials/title-meta', ['title' => 'Log in']);
+                    return view('auth/auth-login', $data);
+                }
+            }
+        }
+    }
+
+    // ... (rest of the class unchanged, including updatePassword, sendEmail, logout)
+
 
 	/*
 	* User Authentication - create session for logged in user

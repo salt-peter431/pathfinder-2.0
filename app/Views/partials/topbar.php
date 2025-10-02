@@ -67,7 +67,7 @@
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img class="rounded-circle header-profile-user" src="assets/images/users/avatar.png" alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ms-1" key="t-henry"><?= esc(session()->get('user_friendly_name') ?: session()->get('user_name')) ?></span>
+                    <span class="d-none d-xl-inline-block ms-1"><?= esc(session()->get('friendly_name') ?: session()->get('username')) ?></span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
@@ -84,7 +84,6 @@
                     <i class="bx bx-cog"></i>
                 </button>
             </div>
-
         </div>
     </div>
 </header>
