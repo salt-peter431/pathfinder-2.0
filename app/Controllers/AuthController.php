@@ -89,70 +89,70 @@ class AuthController extends BaseController
 	* User Authentication - Sign in process
 	* Validate User credentials 
 	*/
-	public function login()
-	{
-		helper(['form']);
-		$data = [];
+public function login()
+{
+    helper(['form']);
+    $data = [];
 
-		if ($this->request->getMethod() == 'get') {
-			$data = [
-				'title_meta' => view('partials/title-meta', ['title' => 'Log in'])
-			];
-			return view('auth/auth-login', $data);
-		}
+    if ($this->request->getMethod() == 'get') {
+        $data = [
+            'title_meta' => view('partials/title-meta', ['title' => 'Log in'])
+        ];
+        return view('auth/auth-login', $data);
+    }
 
-		if ($this->request->getMethod() == 'post') {
-			$rules = [
-				'username' => 'required|min_length[3]|max_length[50]|valid_email',
-				'userpassword' => 'required|min_length[8]'
-			];
+    if ($this->request->getMethod() == 'post') {
+        $rules = [
+            'username' => 'required|min_length[3]|max_length[50]|valid_email',
+            'userpassword' => 'required|min_length[8]'
+        ];
 
-			$errors = [
-				'username' => [
-					'required' => 'Username or email is required.',
-					'min_length' => 'Must be at least 3 characters.',
-					'max_length' => 'Cannot exceed 50 characters.',
-					'valid_email' => 'Please enter a valid email address.'
-				],
-				'userpassword' => [
-					'required' => 'Password is required.',
-					'min_length' => 'Password must be at least 8 characters.'
-				]
-			];
+        $errors = [
+            'username' => [
+                'required' => 'Username or email is required.',
+                'min_length' => 'Must be at least 3 characters.',
+                'max_length' => 'Cannot exceed 50 characters.',
+                'valid_email' => 'Please enter a valid email address.'
+            ],
+            'userpassword' => [
+                'required' => 'Password is required.',
+                'min_length' => 'Password must be at least 8 characters.'
+            ]
+        ];
 
-			if (!$this->validate($rules, $errors)) {
-				$data['validation'] = $this->validator;
-				$data['title_meta'] = view('partials/title-meta', ['title' => 'Log in']);
-				return view('auth/auth-login', $data);
-			} else {
-				$model = new \App\Models\UserModel();
-				$identifier = $this->request->getPost('username');
-				$password = $this->request->getPost('userpassword');
-				$user = $model->findUserByCredentials($identifier, $password);
+        if (!$this->validate($rules, $errors)) {
+            $data['validation'] = $this->validator;
+            $data['title_meta'] = view('partials/title-meta', ['title' => 'Log in']);
+            return view('auth/auth-login', $data);
+        } else {
+            $model = new \App\Models\UserModel();
+            $identifier = $this->request->getPost('username');
+            $password = $this->request->getPost('userpassword');
+            $user = $model->findUserByCredentials($identifier, $password);
 
-				if (is_array($user) && isset($user['error'])) {
-					session()->setFlashdata('error', $user['error']);
-					return redirect()->to('/auth-login');
-				}
+            if (is_array($user) && isset($user['error'])) {
+                session()->setFlashdata('error', $user['error']);
+                return redirect()->to('/auth-login');
+            }
 
-				if (!$user) {
-					session()->setFlashdata('error', 'Username or Password don\'t match.');
-					return redirect()->to('/auth-login');
-				}
-				// Remap prefixed keys for session compatibility (TODO: Refactor app-wide later)
-				$sessionData = [
-					'id' => $user['user_id'],
-					'username' => $user['user_name'],
-					'email' => $user['user_email'],
-					'friendly_name' => $user['user_friendly_name'],
+            if (!$user) {
+                session()->setFlashdata('error', 'Username or Password don\'t match.');
+                return redirect()->to('/auth-login');
+            }
+            // Remap prefixed keys for session compatibility (TODO: Refactor app-wide later)
+            $sessionData = [
+                'id' => $user['user_id'],
+                'username' => $user['user_name'],
+                'email' => $user['user_email'],
+                'friendly_name' => $user['user_friendly_name'] ?? $user['user_name'], // Added fallback to username if no friendly name
 
-					// Add more as needed, e.g., 'friendly_name' => $user['user_friendly_name']
-				];
-				$this->setUserSession($sessionData);
-				return redirect()->to('/');
-			}
-		}
-	}
+                // Add more as needed, e.g., 'friendly_name' => $user['user_friendly_name']
+            ];
+            $this->setUserSession($sessionData);
+            return redirect()->to('/');
+        }
+    }
+}
 
 	/*
 	* User Authentication - create session for logged in user

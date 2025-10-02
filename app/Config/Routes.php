@@ -36,7 +36,7 @@ $routes->match(['get', 'post'], 'auth-login', 'AuthController::login');
 $routes->match(['get', 'post'], 'auth-register', 'AuthController::register');
 $routes->match(['get', 'post'], 'auth-recoverpw', 'AuthController::recoverpw');
 $routes->match(['get', 'post'], 'auth-updatepw', 'AuthController::updatepw');
-// $routes->get('auth-logout', 'AuthController::logout');
+$routes->get('auth-logout', 'AuthController::logout');
 
 $routes->get('/', 'Front::index');
 $routes->get('/home', 'Front::index', ['filter' => 'loginRequired']); // Home route protected by login filter

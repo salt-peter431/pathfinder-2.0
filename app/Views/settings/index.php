@@ -6,7 +6,7 @@
     <?= view('partials/head-css', ['title' => $title]) ?> <!-- Head CSS with title passed -->
 </head>
 
-<body data-topbar="colored" data-layout="horizontal" data-layout-menu="fixed" data-rightbar-onstart="true">
+
     <!-- Begin page -->
     <div id="layout-wrapper">
         <?= view('partials/body') ?> <!-- Topbar and sidebar wrapper -->
@@ -135,6 +135,6 @@
 
     <!-- Vendor JS -->
     <?= view('partials/vendor-scripts') ?>
-</body>
+
 
 </html>

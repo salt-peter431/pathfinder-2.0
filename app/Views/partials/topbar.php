@@ -39,7 +39,7 @@
                     <span key="t-megamenu"><?= lang('Files.Mega Menu') ?></span>
                     <i class="mdi mdi-chevron-down"></i>
                 </button> -->
-                
+
             </div>
         </div>
 
@@ -67,15 +67,15 @@
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img class="rounded-circle header-profile-user" src="assets/images/users/avatar.png" alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ms-1" key="t-henry">user_name</span>
+                    <span class="d-none d-xl-inline-block ms-1" key="t-henry"><?= esc(session()->get('user_friendly_name') ?: session()->get('user_name')) ?></span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item d-block" href="javascript:void(0);"><span class="badge bg-success float-end">11</span><i class="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">Settings</span></a>
-                    <a class="dropdown-item" href="auth-lock-screen"><i class="bx bx-lock-open font-size-16 align-middle me-1"></i> <span key="t-lock-screen">Lock screen</span></a>
+                    <a class="dropdown-item d-block" href="<?= base_url('settings') ?>"><span class="badge bg-success float-end">11</span><i class="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">Settings</span></a>
+                    <a class="dropdown-item" href="<?= base_url('auth-lock-screen') ?>"><i class="bx bx-lock-open font-size-16 align-middle me-1"></i> <span key="t-lock-screen">Lock screen</span></a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="auth-login"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Logout</span></a>
+                    <a class="dropdown-item text-danger" href="<?= base_url('auth-logout') ?>"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Logout</span></a>
                 </div>
             </div>
 
