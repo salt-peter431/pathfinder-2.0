@@ -146,3 +146,4 @@ writable/session/
 storage/framework/cache/data/
 storage/logs/
 vendor/
+pfdr.code-workspace
