@@ -75,6 +75,7 @@ public function register()
                         'friendly_name' => $userData['user_friendly_name']  // ADD THIS LINE
                     ];
                     $this->setUserSession($sessionData);
+					//dd(session()->get());
                     return redirect()->to('home');
                 } else {
                     // Handle insert fail (e.g., DB error)
@@ -143,6 +144,7 @@ public function register()
                         'friendly_name' => $user['user_friendly_name']  // ADD THIS LINE
                     ];
                     $this->setUserSession($sessionData);
+					//dd(session()->get());  // TEMP DEBUG: Dump session to confirm keys are set
                     return redirect()->to('home');
                 } else {
                     session()->setFlashdata('error', 'Invalid credentials or account inactive.');
@@ -156,20 +158,19 @@ public function register()
     // ... (rest of the class unchanged, including updatePassword, sendEmail, logout)
 
 
-	/*
-	* User Authentication - create session for logged in user
-	*/
-	private function setUserSession($user)
-	{
-		$data = [
-			'id' => $user['id'],
-			'email' => $user['email'],
-			'username' => $user['username'],
-			'isLoggedIn' => true,
-		];
-		session()->set($data);
-		return true;
-	}
+/*
+* User Authentication - create session for logged in user
+*/
+private function setUserSession($user)
+{
+    // Set all provided user data directly (includes extras like 'friendly_name')
+    session()->set($user);
+    
+    // Ensure 'isLoggedIn' is always set to true for authenticated users
+    session()->set('isLoggedIn', true);
+    
+    return true;
+}
 
 	/*
  * User Authentication - Recover password 
