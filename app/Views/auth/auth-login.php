@@ -2,15 +2,12 @@
 <html lang="en">
 
 <head>
-
-    <?= $title_meta ?>
-
-    <?= $this->include('partials/head-css') ?>
-
+    <?= view('partials/head-css', ['title' => $title ?? 'Log In', 'theme_mode' => $theme_mode ?? 'dark']) ?> <!-- NEW: Add CSS with title and theme_mode -->
+    <?= $title_meta ?? '' ?> <!-- Existing title-meta if passed -->
 </head>
-
+<?= view('partials/body') ?> <!-- Topbar and sidebar wrapper -->
 <div id="layout-wrapper">
-        <?= view('partials/body') ?> <!-- Topbar and sidebar wrapper -->
+        
     <div class="account-pages my-5 pt-sm-5">
         <div class="container">
             <div class="row justify-content-center">
@@ -127,5 +124,5 @@
     <!-- App js -->
     <script src="assets/js/app.js"></script>
 </div>
-
+</body>
 </html>

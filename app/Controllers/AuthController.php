@@ -19,141 +19,153 @@ class AuthController extends BaseController
 	* Unique token generated - used for reset password functionality
 	*/
 public function register()
-    {
-        helper(['form', 'text']);
-        $data = [];
+{
+    helper(['form', 'text']);
+    $data = [];
 
-        if ($this->request->getMethod() == 'get') {
-            $data = [
-                'title_meta' => view('partials/title-meta', ['title' => 'Register'])
-            ];
+    if ($this->request->getMethod() == 'get') {
+        $data = [
+            'title_meta' => view('partials/title-meta', ['title' => 'Register'])
+        ];
+
+        // NEW: Merge global data (e.g., theme_mode from BaseController) into local $data
+        $data = array_merge($this->data, $data);
+
+        return view('auth/auth-register', $data);
+    }
+
+    if ($this->request->getMethod() == 'post') {
+        $rules = [
+            'useremail' => 'required|min_length[8]|max_length[50]|valid_email|is_unique[users.user_email]',
+            'username' => 'required|min_length[3]|max_length[50]|is_unique[users.user_name]',
+            'userpassword' => 'required|min_length[8]|max_length[50]',
+            'userpassword_confirm' => 'matches[userpassword]',
+            'user_friendly_name' => 'required|min_length[2]|max_length[50]',
+        ];
+
+        $errors = [
+            'userpassword' => [
+                'required' => 'The Password is required.'
+            ],
+            'userpassword_confirm' => [
+                'matches' => 'The Password and Confirm Password don\'t match.'
+            ]
+        ];
+
+        $data['title_meta'] = view('partials/title-meta', ['title' => 'Register']);
+
+        if (!$this->validate($rules, $errors)) {
+            $data['validation'] = $this->validator;
+
+            // NEW: Merge global data (e.g., theme_mode from BaseController) into local $data
+            $data = array_merge($this->data, $data);
+
             return view('auth/auth-register', $data);
-        }
+        } else {
+            // ---- store details in database
+            $model = new UserModel();
 
-        if ($this->request->getMethod() == 'post') {
-            $rules = [
-                'useremail' => 'required|min_length[8]|max_length[50]|valid_email|is_unique[users.user_email]',
-                'username' => 'required|min_length[3]|max_length[50]|is_unique[users.user_name]',
-                'userpassword' => 'required|min_length[8]|max_length[50]',
-                'userpassword_confirm' => 'matches[userpassword]',
-                'user_friendly_name' => 'required|min_length[2]|max_length[50]',
+            $userData = [
+                'user_name' => $this->request->getVar('username'),
+                'user_email' => $this->request->getVar('useremail'),
+                'user_friendly_name' => $this->request->getVar('user_friendly_name'),
+                'user_password' => $this->request->getVar('userpassword'),  // Hashes via model callback
+                'user_role' => 'user',  // Default for new users
+                'user_status' => 'active',  // Default active
+                'token' => random_string('alnum', 16)
             ];
-
-            $errors = [
-                'userpassword' => [
-                    'required' => 'The Password is required.'
-                ],
-                'userpassword_confirm' => [
-                    'matches' => 'The Password and Confirm Password don\'t match.'
-                ]
-            ];
-
-            $data['title_meta'] = view('partials/title-meta', ['title' => 'Register']);
-
-            if (!$this->validate($rules, $errors)) {
-                $data['validation'] = $this->validator;
-            } else {
-                // ---- store details in database
-                $model = new UserModel();
-
-                $userData = [
-                    'user_name' => $this->request->getVar('username'),
-                    'user_email' => $this->request->getVar('useremail'),
-                    'user_friendly_name' => $this->request->getVar('user_friendly_name'),
-                    'user_password' => $this->request->getVar('userpassword'),  // Hashes via model callback
-                    'user_role' => 'user',  // Default for new users
-                    'user_status' => 'active',  // Default active
-                    'token' => random_string('alnum', 16)
+            $id = $model->insert($userData);  // Use insert() for clarity; returns ID
+            if ($id) {
+                // Remap for session compatibility (TODO: Refactor app-wide later)
+                $sessionData = [
+                    'id' => $id,
+                    'username' => $userData['user_name'],
+                    'email' => $userData['user_email'],
+                    'friendly_name' => $userData['user_friendly_name']  // ADD THIS LINE
                 ];
-                $id = $model->insert($userData);  // Use insert() for clarity; returns ID
-                if ($id) {
-                    // Remap for session compatibility (TODO: Refactor app-wide later)
-                    $sessionData = [
-                        'id' => $id,
-                        'username' => $userData['user_name'],
-                        'email' => $userData['user_email'],
-                        'friendly_name' => $userData['user_friendly_name']  // ADD THIS LINE
-                    ];
-                    $this->setUserSession($sessionData);
-					//dd(session()->get());
-                    return redirect()->to('home');
-                } else {
-                    // Handle insert fail (e.g., DB error)
-                    session()->setFlashdata('error', 'Registration failed. Please try again.');
-                }
-            }
-            // Always return the view on POST (with errors, repopulated fields, or flashdata)
-            return view('auth/auth-register', $data);
-        }
-    }
-
-    /*
-    * User Authentication - Sign in process
-    * Validate User credentials 
-    */
-    public function login()
-    {
-        helper(['form']);
-        $data = [];
-
-        if ($this->request->getMethod() == 'get') {
-            $data = [
-                'title_meta' => view('partials/title-meta', ['title' => 'Log in'])
-            ];
-            return view('auth/auth-login', $data);
-        }
-
-        if ($this->request->getMethod() == 'post') {
-            $rules = [
-                'username' => 'required|min_length[3]|max_length[50]|valid_email',
-                'userpassword' => 'required|min_length[8]'
-            ];
-
-            $errors = [
-                'username' => [
-                    'required' => 'Username or email is required.',
-                    'min_length' => 'Must be at least 3 characters.',
-                    'max_length' => 'Cannot exceed 50 characters.',
-                    'valid_email' => 'Please enter a valid email address.'
-                ],
-                'userpassword' => [
-                    'required' => 'Password is required.',
-                    'min_length' => 'Password must be at least 8 characters.'
-                ]
-            ];
-
-            if (!$this->validate($rules, $errors)) {
-                $data['validation'] = $this->validator;
-                $data['title_meta'] = view('partials/title-meta', ['title' => 'Log in']);
-                return view('auth/auth-login', $data);
+                $this->setUserSession($sessionData);
+                return redirect()->to('/auth-login');
             } else {
-                $model = new \App\Models\UserModel();
-                $identifier = $this->request->getPost('username');
-                $password = $this->request->getPost('userpassword');
-                $user = $model->findUserByCredentials($identifier, $password);
-                
-                // TODO: Uncomment only for debugging; remove in production
-                // dd($user);
-
-                if ($user && $user['user_status'] === 'active') {
-                    // Remap for session compatibility (TODO: Refactor app-wide later)
-                    $sessionData = [
-                        'id' => $user['user_id'],
-                        'username' => $user['user_name'],
-                        'email' => $user['user_email'],
-                        'friendly_name' => $user['user_friendly_name']  // ADD THIS LINE
-                    ];
-                    $this->setUserSession($sessionData);
-					//dd(session()->get());  // TEMP DEBUG: Dump session to confirm keys are set
-                    return redirect()->to('home');
-                } else {
-                    session()->setFlashdata('error', 'Invalid credentials or account inactive.');
-                    $data['title_meta'] = view('partials/title-meta', ['title' => 'Log in']);
-                    return view('auth/auth-login', $data);
-                }
+                session()->setFlashdata('error', 'Failed to create account. Please try again.');
+                // NEW: Merge global data before returning view on error
+                $data = array_merge($this->data, $data);
+                return view('auth/auth-register', $data);
             }
         }
     }
+}
+
+public function login()
+{
+    helper(['form']);
+    $data = [
+        'title_meta' => view('partials/title-meta', ['title' => 'Log in'])
+    ];
+
+    // NEW: Merge global data (e.g., theme_mode from BaseController) into local $data
+    $data = array_merge($this->data, $data);
+
+    if ($this->request->getMethod() == 'post') {
+        $rules = [
+            'username' => 'required|min_length[3]|max_length[50]|valid_email',
+            'userpassword' => 'required|min_length[8]'
+        ];
+
+        $errors = [
+            'username' => [
+                'required' => 'Username or email is required.',
+                'min_length' => 'Must be at least 3 characters.',
+                'max_length' => 'Cannot exceed 50 characters.',
+                'valid_email' => 'Please enter a valid email address.'
+            ],
+            'userpassword' => [
+                'required' => 'Password is required.',
+                'min_length' => 'Password must be at least 8 characters.'
+            ]
+        ];
+
+        if (!$this->validate($rules, $errors)) {
+            $data['validation'] = $this->validator;
+            $data['title_meta'] = view('partials/title-meta', ['title' => 'Log in']);
+
+            // NEW: Merge global data (e.g., theme_mode from BaseController) into local $data
+            $data = array_merge($this->data, $data);
+
+            return view('auth/auth-login', $data);
+        } else {
+            $model = new \App\Models\UserModel();
+            $identifier = $this->request->getPost('username');
+            $password = $this->request->getPost('userpassword');
+            $user = $model->findUserByCredentials($identifier, $password);
+            
+            // TODO: Uncomment only for debugging; remove in production
+            // dd($user);
+
+            if ($user && $user['user_status'] === 'active') {
+                // Remap for session compatibility (TODO: Refactor app-wide later)
+                $sessionData = [
+                    'id' => $user['user_id'],
+                    'username' => $user['user_name'],
+                    'email' => $user['user_email'],
+                    'friendly_name' => $user['user_friendly_name']  // ADD THIS LINE
+                ];
+                $this->setUserSession($sessionData);
+                //dd(session()->get());  // TEMP DEBUG: Dump session to confirm keys are set
+                return redirect()->to('home');
+            } else {
+                session()->setFlashdata('error', 'Invalid credentials or account inactive.');
+                $data['title_meta'] = view('partials/title-meta', ['title' => 'Log in']);
+
+                // NEW: Merge global data (e.g., theme_mode from BaseController) into local $data
+                $data = array_merge($this->data, $data);
+
+                return view('auth/auth-login', $data);
+            }
+        }
+    }
+
+    return view('auth/auth-login', $data);
+}
 
     // ... (rest of the class unchanged, including updatePassword, sendEmail, logout)
 

@@ -2,15 +2,12 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <?= view('partials/head-css', ['title' => $title]) ?> <!-- Head CSS with title passed -->
+    <?= view('partials/head-css', ['title' => $title, 'theme_mode' => $theme_mode]) ?> <!-- Head CSS with title and theme_mode passed -->
 </head>
-
+    <?= view('partials/body') ?>
 
     <!-- Begin page -->
     <div id="layout-wrapper">
-        <?= view('partials/body') ?> <!-- Topbar and sidebar wrapper -->
-
         <!-- Main Content -->
         <div class="main-content">
             <div class="page-content">
@@ -136,5 +133,5 @@
     <!-- Vendor JS -->
     <?= view('partials/vendor-scripts') ?>
 
-
+</body>
 </html>
