@@ -411,4 +411,5 @@ class AuthController extends BaseController
 		return view('auth/auth-login', $data);
 	}
 	//--------------------------------------------------------------------
+
 }
