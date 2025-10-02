@@ -3,19 +3,19 @@
 
 <head>
     <meta charset="utf-8" />
-    <?= $this->include('partials/head-css', ['title' => $title]) ?> <!-- Head CSS with title passed -->
+    <?= view('partials/head-css', ['title' => $title]) ?> <!-- Head CSS with title passed -->
 </head>
 
 <body data-topbar="colored" data-layout="horizontal" data-layout-menu="fixed" data-rightbar-onstart="true">
     <!-- Begin page -->
     <div id="layout-wrapper">
-        <?= $this->include('partials/body') ?> <!-- Topbar and sidebar wrapper -->
+        <?= view('partials/body') ?> <!-- Topbar and sidebar wrapper -->
 
         <!-- Main Content -->
         <div class="main-content">
             <div class="page-content">
                 <div class="container-fluid">
-                    <?= $this->include('partials/page-title', ['pagetitle' => 'User Settings']) ?> <!-- Page title -->
+                    <?= view('partials/page-title', ['pagetitle' => 'User Settings']) ?> <!-- Page title -->
 
                     <!-- Content Row -->
                     <div class="row">
@@ -125,16 +125,16 @@
             </div>
         </div>
 
-        <?= $this->include('partials/right-sidebar') ?> <!-- Optional right sidebar -->
+        <?= view('partials/right-sidebar') ?> <!-- Optional right sidebar -->
     </div>
     <!-- End layout-wrapper -->
 
-    <?= $this->include('partials/menu') ?> <!-- Sidebar menu -->
+    <?= view('partials/menu') ?> <!-- Sidebar menu -->
 
-    <?= $this->include('partials/footer') ?> <!-- Footer -->
+    <?= view('partials/footer') ?> <!-- Footer -->
 
     <!-- Vendor JS -->
-    <?= $this->include('partials/vendor-scripts') ?>
+    <?= view('partials/vendor-scripts') ?>
 </body>
 
 </html>
