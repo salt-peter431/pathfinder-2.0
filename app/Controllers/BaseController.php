@@ -43,6 +43,13 @@ abstract class BaseController extends Controller
      */
     // protected $session;
 
+    // NEW: Declare view data array for global vars like theme_mode
+    protected $data = [];
+
+    // NEW: Declare model properties for theme loading
+    protected $userSettingsModel;
+    protected $userModel;
+
     /**
      * Constructor.
      */
@@ -57,5 +64,22 @@ abstract class BaseController extends Controller
         $session = \Config\Services::session();
         $language = \Config\Services::language();
         $language->setLocale($session->lang);
+
+        // NEW: Load models for theme fetching
+        $this->userSettingsModel = new \App\Models\UserSettingsModel();
+        $this->userModel = new \App\Models\UserModel();
+
+        // NEW: Global: Load theme_mode if user logged in
+        $userId = session()->get('id');
+        $themeMode = 'dark'; // Default
+        if ($userId) {
+            $user = $this->userModel->find($userId);
+            if ($user) {
+                $settings = $this->userSettingsModel->getUserSettings($userId);
+                $themeMode = $settings['theme_mode'] ?? 'dark';
+            }
+        }
+        // Pass to all views (child controllers can access via $this->data)
+        $this->data['theme_mode'] = $themeMode;
     }
 }

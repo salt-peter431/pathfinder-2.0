@@ -3,13 +3,27 @@
 class Front extends BaseController
 {	
 	public function index()
-	{
-		$data = [
-			'title_meta' => view('partials/title-meta', ['title' => 'Dashboard']),
-			'page_title' => view('partials/page-title', ['title' => 'Dashboard', 'pagetitle' => 'Dashboards'])
-		];
-		return view('Front/index', $data);
-	}
+{
+    // Local data
+    $title = 'Dashboard | Skote - Admin & Dashboard Template';  // For <head> meta
+    $page_title = 'Dashboard';  // For page header/breadcrumb
+
+    // Pre-render title-meta partial (matches AuthController pattern)
+    $title_meta = view('partials/title-meta', ['title' => $title]);
+
+    $data = [
+        'title_meta' => $title_meta,
+        'title' => $title,  // If view needs raw $title
+        'page_title' => $page_title  // NEW: For page-title partial
+        // Add any other local data from your original index()
+    ];
+
+    // Merge global data (e.g., theme_mode from BaseController) into local $data
+    $data = array_merge($this->data, $data);
+
+    // Return the view with merged data
+    return view('Front/index', $data);
+}
 
 	public function show_dashboard_saas()
 	{

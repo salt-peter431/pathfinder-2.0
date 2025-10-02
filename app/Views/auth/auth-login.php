@@ -9,7 +9,8 @@
 
 </head>
 
-<body>
+<div id="layout-wrapper">
+        <?= view('partials/body') ?> <!-- Topbar and sidebar wrapper -->
     <div class="account-pages my-5 pt-sm-5">
         <div class="container">
             <div class="row justify-content-center">
@@ -125,6 +126,6 @@
 
     <!-- App js -->
     <script src="assets/js/app.js"></script>
-</body>
+</div>
 
 </html>

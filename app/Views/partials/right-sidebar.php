@@ -20,7 +20,7 @@
             </div>
 
             <div class="form-check form-switch mb-3">
-                <input class="form-check-input theme-choice" type="checkbox" id="light-mode-switch" checked>
+                <input class="form-check-input theme-choice" type="checkbox" id="light-mode-switch">
                 <label class="form-check-label" for="light-mode-switch"><?= lang('Files.Light Mode') ?></label>
             </div>
     
@@ -31,23 +31,6 @@
                 <input class="form-check-input theme-choice" type="checkbox" id="dark-mode-switch" data-bsStyle="assets/css/bootstrap-dark.min.css" data-appStyle="assets/css/app-dark.min.css">
                 <label class="form-check-label" for="dark-mode-switch"><?= lang('Files.Dark Mode') ?></label>
             </div>
-    
-            <div class="mb-2">
-                <img src="assets/images/layouts/layout-3.jpg" class="img-fluid img-thumbnail" alt="">
-            </div>
-            <div class="form-check form-switch mb-5">
-                <input class="form-check-input theme-choice" type="checkbox" id="rtl-mode-switch" data-appStyle="assets/css/app-rtl.min.css">
-                <label class="form-check-label" for="rtl-mode-switch"><?= lang('Files.RTL Mode') ?></label>
-            </div>
-
-            <div class="mb-2">
-                <img src="assets/images/layouts/layout-4.jpg" class="img-thumbnail" alt="layout images">
-            </div>
-            <div class="form-check form-switch mb-5">
-                <input class="form-check-input theme-choice" type="checkbox" id="dark-rtl-mode-switch">
-                <label class="form-check-label" for="dark-rtl-mode-switch"><?= lang('Files.Dark RTL Mode') ?></label>
-            </div>
-
         </div>
 
     </div> <!-- end slimscroll-menu-->
