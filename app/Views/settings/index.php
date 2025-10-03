@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <?= $this->include('partials/title-meta') ?>
     <?= view('partials/head-css', ['title' => $title, 'theme_mode' => $theme_mode]) ?> <!-- Head CSS with title and theme_mode passed -->
 </head>
     <?= view('partials/body') ?>
@@ -101,7 +102,7 @@
                                                         <div class="mb-3">
                                                             <label for="home_screen" class="form-label">Home Screen</label>
                                                             <select name="home_screen" id="home_screen" class="form-select">
-                                                                <option value="dashboard" <?= $settings['home_screen'] === 'dashboard' ? 'selected' : '' ?>>Dashboard</option>
+                                                                <option value="home" <?= $settings['home_screen'] === 'dashboard' ? 'selected' : '' ?>>Dashboard</option>
                                                                 <option value="orders" <?= $settings['home_screen'] === 'orders' ? 'selected' : '' ?>>Orders</option>
                                                                 <option value="customers" <?= $settings['home_screen'] === 'customers' ? 'selected' : '' ?>>Customers</option>
                                                             </select>

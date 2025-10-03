@@ -6,11 +6,23 @@
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);"><?= $pagetitle ? lang($pagetitle) : '' ?></a></li>
-                    <li class="breadcrumb-item active"><?= $title ? lang($title) : '' ?></li>
+                    <?php if (isset($breadcrumbs) && is_array($breadcrumbs) && !empty($breadcrumbs)): ?>
+                        <?php foreach ($breadcrumbs as $index => $crumb): ?>
+                            <li class="breadcrumb-item <?= ($index === array_key_last($breadcrumbs)) ? 'active' : '' ?>">
+                                <?php if ($index < array_key_last($breadcrumbs)): ?>
+                                    <a href="<?= esc($crumb['url'], 'url') ?>"><?= lang(esc($crumb['name'])) ?></a>
+                                <?php else: ?>
+                                    <?= lang(esc($crumb['name'])) ?>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <!-- Fallback for legacy/empty cases -->
+                        <li class="breadcrumb-item"><a href="javascript: void(0);"><?= $pagetitle ? lang($pagetitle) : '' ?></a></li>
+                        <li class="breadcrumb-item active"><?= $title ? lang($title) : '' ?></li>
+                    <?php endif; ?>
                 </ol>
             </div>
-
         </div>
     </div>
 </div>

@@ -82,4 +82,26 @@ abstract class BaseController extends Controller
         // Pass to all views (child controllers can access via $this->data)
         $this->data['theme_mode'] = $themeMode;
     }
+    protected function getHomeBreadcrumb($currentRoute = '') {
+    // Assume session holds user_id (from your auth system)
+    $userId = session()->get('user_id');
+    if (!$userId) {
+        return [['name' => 'Home', 'url' => site_url('')]]; // Fallback to root if no user
+    }
+
+    $userSettingsModel = new \App\Models\UserSettingsModel();
+    $homeSetting = $userSettingsModel->where('user_id', $userId)
+                                     ->where('setting_key', 'home_screen')
+                                     ->first();
+    $homeRoute = $homeSetting ? $homeSetting->setting_value : 'dashboard'; // Default fallback
+    $homeUrl = site_url($homeRoute);
+
+    if ($currentRoute === $homeRoute) {
+        // On homepage: single active item with page-specific name
+        return [['name' => ucfirst(str_replace(['-', '_'], ' ', $homeRoute)), 'url' => null]];
+    }
+
+    // Otherwise: "Home" link + rest
+    return [['name' => 'Home', 'url' => $homeUrl]];
+}
 }

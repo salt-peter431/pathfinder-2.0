@@ -5,7 +5,7 @@ class Front extends BaseController
 	public function index()
 {
     // Local data
-    $title = 'Dashboard | Skote - Admin & Dashboard Template';  // For <head> meta
+    $title = '| Pathfinder 2.0';  // For <head> meta
     $page_title = 'Dashboard';  // For page header/breadcrumb
 
     // Pre-render title-meta partial (matches AuthController pattern)
