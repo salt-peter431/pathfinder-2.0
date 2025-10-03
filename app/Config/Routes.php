@@ -226,7 +226,8 @@ $routes->get('maps-leaflet', 'ComponentController::show_maps_leaflet');
  */
 //$routes->get('profile', 'AppController::profile');
 $routes->match(['get', 'post'], 'settings', [\App\Controllers\SettingsController::class, 'index'], ['filter' => 'loginRequired']); // User settings route protected by login filter
-$routes->get('customers', 'CustomersController::index');
+$routes->get('customers', 'CustomerController::index');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

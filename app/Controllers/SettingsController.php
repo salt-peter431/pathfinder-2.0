@@ -112,6 +112,17 @@ class SettingsController extends BaseController
 
             if ($success) {
                 session()->setFlashdata('success', 'Settings updated successfully!');
+    
+                // NEW: Sync updated settings to session for global use (e.g., on other pages like customers)
+                if (isset($postData['theme_mode'])) {
+        session()->set('theme_mode', $postData['theme_mode']);
+                }
+                if (isset($postData['sidebar_layout'])) {
+        session()->set('sidebar_layout', $postData['sidebar_layout']);
+                }
+                if (isset($postData['home_screen'])) {
+        session()->set('home_screen', $postData['home_screen']);
+                }
             } else {
                 session()->setFlashdata('error', 'Failed to update settings.');
             }

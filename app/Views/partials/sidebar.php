@@ -15,9 +15,9 @@
                         <span>Dashboards</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="/orders.php" >Orders</a></li>
-                        <li><a href="/customers.php" >Customers</a></li>
-                        <li><a href="/vendors.php" >Vendors</a></li>
+                        <li><a href="/" >Orders</a></li>
+                        <li><a href="<?= base_url('customers') ?>" >Customers</a></li>
+                        <li><a href="/" >Vendors</a></li>
                     </ul>
                 </li>               
 

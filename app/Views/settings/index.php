@@ -14,7 +14,7 @@
             <div class="page-content">
                 <div class="container-fluid">
                     <?= view('partials/page-title', ['pagetitle' => 'User Settings']) ?> <!-- Page title -->
-                    <?= $theme_mode ?? 'NOT SET' ?> <!-- Debug: Display theme_mode -->
+                    <!--<?= $theme_mode ?? 'NOT SET' ?>--> <!-- Debug: Display theme_mode -->
                     <!-- Content Row -->
                     <div class="row">
                         <div class="col-12">

@@ -13,8 +13,8 @@
         <div class="main-content">
             <div class="page-content">
                 <div class="container-fluid">
-                    <?= view('partials/page-title', ['pagetitle' => 'User Settings']) ?> <!-- Page title -->
-                    <?= $theme_mode ?? 'NOT SET' ?> <!-- Debug: Display theme_mode -->
+                    <?= view('partials/page-title', ['pagetitle' => $pagetitle ?? $title]) ?> <!-- Page title: Use $pagetitle if passed, fallback to $title -->
+                    <!--<?= $theme_mode ?? 'NOT SET' ?>--> <!-- Debug: Display theme_mode -->
                     <!-- Content-->
                     
                 </div>
