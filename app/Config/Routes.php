@@ -220,11 +220,13 @@ $routes->get('maps-leaflet', 'ComponentController::show_maps_leaflet');
 /*
  * --------------------------------------------------------------------
  * Custom Routing
+ * $routes->get('customers', 'CustomersController::index');
  * --------------------------------------------------------------------
  * Created by me to override the default routing behavior.
  */
-$routes->get('profile', 'AppController::profile');
+//$routes->get('profile', 'AppController::profile');
 $routes->match(['get', 'post'], 'settings', [\App\Controllers\SettingsController::class, 'index'], ['filter' => 'loginRequired']); // User settings route protected by login filter
+$routes->get('customers', 'CustomersController::index');
 /*
  * --------------------------------------------------------------------
  * Additional Routing

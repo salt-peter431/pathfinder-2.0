@@ -1,0 +1,40 @@
+Breadcrumb Integration Guide for Future Pages
+When building a new page (e.g., in a controller like OrdersController::viewItem($orderId, $itemId)), follow this checklist to ensure consistent breadcrumbs (Home → Sections → Details). Assumes getHomeBreadcrumb() is in BaseController and page-title.php is updated.
+1. Prepare Data in Controller Method
+
+After auth checks and data loading (e.g., from models):
+php$currentRoute = 'orders';  // Top-level route (e.g., 'orders', 'customers'); detect via $this->request->uri->getSegment(1) if dynamic.
+$breadcrumbs = $this->getHomeBreadcrumb($currentRoute);  // Starts with "Home" link (or single active for homepage).
+
+Append crumbs for sections/details (fetch names from DB/models as needed):
+
+For 2nd level: $breadcrumbs[] = ['name' => 'Orders', 'url' => site_url('orders')];
+For 3rd: $breadcrumbs[] = ['name' => "Order #{$order->order_number}", 'url' => site_url("orders/view/{$orderId}")];
+For 4th (active last): $breadcrumbs[] = ['name' => $item->name ?? 'Item', 'url' => null];
+
+
+Set $title = 'Page Title'; (e.g., 'Business Cards') for <h4> in partial.
+Add to $data: $data['breadcrumbs'] = $breadcrumbs;
+Merge with globals: $data = array_merge($this->data, $data);
+Return: return view('path/to/view', $data);
+
+2. View Setup
+
+Include <?= view('partials/page-title') ?> at the top (passes $title and $breadcrumbs automatically).
+No changes needed in view—partial handles rendering.
+
+3. Test the Page
+
+Load URL (e.g., /orders/view/123/item/456).
+Verify: 1-4 levels, "Home" links to user's home_screen (from DB), intermediates link correctly, last is active (no link).
+Edge: On homepage (e.g., dashboard), single active crumb.
+POST/redirects: Breadcrumbs ignored (computed only for GET).
+
+Tips
+
+Levels Limit: Cap at 4; use modals/popups for deeper nav.
+Routes: Define in app/Config/Routes.php (e.g., $routes->get('orders', 'OrdersController::index');); use site_url() for links.
+i18n/Security: Relies on lang() and esc() in partial—names from DB are auto-escaped.
+Debug: var_dump($breadcrumbs); in controller, then remove.
+
+Copy this into a file like breadcrumb-guide.md in your repo for quick reference. Let me know if you need tweaks!

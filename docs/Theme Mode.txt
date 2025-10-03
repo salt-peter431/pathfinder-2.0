@@ -1,0 +1,65 @@
+Implementing Dark/Light Mode on New Pages in Pathfinder 2.0
+This guide assumes you're extending the existing Skote template structure and have already implemented the global theme loading in BaseController.php (as per our recent changes). For new pages (e.g., customer or orders views/controllers), follow these steps to ensure theme_mode ('dark' or 'light') from user settings applies seamlessly. The process is mostly boilerplate—copy-paste with minor tweaks.
+1. Controller Setup (Extend BaseController & Merge Data)
+All controllers should extend BaseController to inherit global $this->data['theme_mode']. Merge it into your local $data before rendering views.
+Example: New CustomerController.php (app/Controllers/CustomerController.php)
+php<?php
+namespace App\Controllers;
+
+use App\Controllers\BaseController; // Extend this for globals
+
+class CustomerController extends BaseController
+{
+    public function index()
+    {
+        // Your local logic here (e.g., fetch customers)
+        $data = [
+            'title' => 'Customers | Pathfinder Dashboard',
+            'customers' => [] // Example data
+        ];
+
+        // Merge global data (includes theme_mode)
+        $data = array_merge($this->data, $data);
+
+        return view('customers/index', $data);
+    }
+
+    // Add other methods (new, edit) similarly, with the merge line
+}
+
+Key: Add $data = array_merge($this->data, $data); before every return view(...). This passes theme_mode to the view.
+Tip: If the page requires auth, add a check like in SettingsController: if (!session()->get('id')) { return redirect()->to('/auth-login'); }.
+
+2. View Layout (Use Partials for Body & Head)
+New pages should use the same layout structure as existing ones (e.g., index.php in your provided docs). Include partials for <head> and <body>, passing $title and relying on $theme_mode.
+Example: New customers/index.php (app/Views/customers/index.php)
+php<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?= view('partials/head-css', ['title' => $title]) ?> <!-- Handles conditional CSS based on theme_mode -->
+</head>
+<body>
+    <!-- Your page content here, e.g., table of customers -->
+    <div id="layout-wrapper">
+        <?= view('partials/body') ?> <!-- Applies theme_mode to <body> class & JS sync -->
+        <!-- Main content, sidebar, etc. -->
+    </div>
+    <?= view('partials/footer') ?>
+    <?= view('partials/vendor-scripts') ?>
+</html>
+
+No Changes Needed: As long as you include partials/head-css and partials/body, theme_mode auto-applies (classes like dark-mode on <body>, dark CSS files loaded conditionally).
+
+3. Ensure Partials Are Theme-Aware
+If creating new partials (unlikely for themes), reference $theme_mode. But reuse existing ones:
+
+body.php: Already has <body class="<?= $theme_mode === 'dark' ? 'dark-mode' : 'light-mode' ?>"> and JS to sync localStorage.
+head-css.php: Already conditionally loads bootstrap-dark.min.css and app-dark.min.css if $theme_mode === 'dark'.
+
+4. Test & Sidebar Sync
+
+Test: Log in, set theme in /settings, visit new page—should match (dark/light classes/CSS). Toggle in right sidebar (via right-sidebar.php)—switches live via JS.
+Full Sync: Sidebar toggles save to localStorage only; for DB sync on toggle, add AJAX later (e.g., POST to a SettingsController endpoint). For now, reloads use DB preference.
+Edge Case: Unlogged users default to 'dark' (set in BaseController).
+
+This keeps new pages consistent with ~5 lines of code total. If you add sidebar_layout or home_screen later, extend the same pattern (add to BaseController globals). Questions on a specific page? Share details!
