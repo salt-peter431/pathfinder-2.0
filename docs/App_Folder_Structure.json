@@ -1,0 +1,191 @@
+{
+  "app": {
+    "Common": "php",
+    "Config": {
+      "App": "php",
+      "Autoload": "php",
+      "Boot": {
+        "development": "php",
+        "production": "php",
+        "testing": "php"
+      },
+      "Cache": "php",
+      "Constants": "php",
+      "ContentSecurityPolicy": "php",
+      "Cookie": "php",
+      "CURLRequest": "php",
+      "Database": "php",
+      "DocTypes": "php",
+      "Email": "php",
+      "Encryption": "php",
+      "Events": "php",
+      "Exceptions": "php",
+      "Feature": "php",
+      "Filters": "php",
+      "ForeignCharacters": "php",
+      "Format": "php",
+      "Generators": "php",
+      "Honeypot": "php",
+      "Images": "php",
+      "Kint": "php",
+      "Logger": "php",
+      "Migrations": "php",
+      "Mimes": "php",
+      "Modules": "php",
+      "Pager": "php",
+      "Paths": "php",
+      "Publisher": "php",
+      "Routes": "php",
+      "Security": "php",
+      "Services": "php",
+      "Session": "php",
+      "Toolbar": "php",
+      "UserAgents": "php",
+      "Validation": "php",
+      "View": "php"
+    },
+    "Controllers": {
+      "AppController": "php",
+      "AuthController": "php",
+      "BaseController": "php",
+      "ComponentController": "php",
+      "Front": "php",
+      "Language": "php",
+      "PageController": "php",
+      "SettingsController": "php"
+    },
+    "Database": {
+      "Migrations": {
+        "2020-09-17-084543_create_users_table": "php"
+      },
+      "Seeds": {}
+    },
+    "Filters": {
+      "Auth": "php",
+      "AuthAccess": "php",
+      "LoginRequired": "php",
+      "SecurityHeaders": "php"
+    },
+    "Helpers": {},
+    "index": "html",
+    "Language": {
+      "de": {
+        "Files": "php"
+      },
+      "en": {
+        "Files": "php",
+        "Validation": "php"
+      },
+      "es": {
+        "Files": "php"
+      },
+      "it": {
+        "Files": "php"
+      },
+      "ru": {
+        "Files": "php"
+      }
+    },
+    "Libraries": {},
+    "Models": {
+      "UserModel": "php",
+      "UserSettingsModel": "php"
+    },
+    "ThirdParty": {},
+    "Validation": {
+      "UserRules": "php"
+    },
+    "Views": {
+      "auth": {
+        "auth-lock-screen": "php",
+        "auth-login": "php",
+        "auth-recoverpw": "php",
+        "auth-register": "php",
+        "auth-updatepw": "php"
+      },
+      "auth-confirm-mail-2": "php",
+      "auth-confirm-mail": "php",
+      "auth-email-verification-2": "php",
+      "auth-email-verification": "php",
+      "auth-lock-screen-2": "php",
+      "auth-lock-screen": "php",
+      "auth-login-2": "php",
+      "auth-login": "php",
+      "auth-recoverpw-2": "php",
+      "auth-recoverpw": "php",
+      "auth-register-2": "php",
+      "auth-register": "php",
+      "auth-two-step-verification-2": "php",
+      "auth-two-step-verification": "php",
+      "blog-details": "php",
+      "customers": {},
+      "errors": {
+        "cli": {
+          "error_404": "php",
+          "error_exception": "php",
+          "production": "php"
+        },
+        "html": {
+          "debug": "css",
+          "debug.js": "js",
+          "error_404": "php",
+          "error_exception": "php",
+          "production": "php"
+        }
+      },
+      "Front": {
+        "dashboard-blog": "php",
+        "dashboard-crypto": "php",
+        "dashboard-job": "php",
+        "dashboard-saas": "php",
+        "index": "php",
+        "layouts-boxed": "php",
+        "layouts-colored-sidebar": "php",
+        "layouts-compact-sidebar": "php",
+        "layouts-hori-boxed-width": "php",
+        "layouts-hori-colored-header": "php",
+        "layouts-hori-preloader": "php",
+        "layouts-hori-scrollable": "php",
+        "layouts-hori-topbar-light": "php",
+        "layouts-horizontal": "php",
+        "layouts-icon-sidebar": "php",
+        "layouts-light-sidebar": "php",
+        "layouts-preloader": "php",
+        "layouts-scrollable": "php",
+        "layouts-vertical": "php"
+      },
+      "index-rtl": "php",
+      "invoices-detail": "php",
+      "invoices-list": "php",
+      "layouts": {},
+      "orders": {},
+      "pages-404": "php",
+      "pages-500": "php",
+      "pages-comingsoon": "php",
+      "pages-maintenance": "php",
+      "pages-starter": "php",
+      "partials": {
+        "body": "php",
+        "footer": "php",
+        "head-css": "php",
+        "horizontal": "php",
+        "menu": "php",
+        "page-title": "php",
+        "right-sidebar": "php",
+        "sidebar": "php",
+        "title-meta": "php",
+        "topbar": "php",
+        "vendor-scripts": "php"
+      },
+      "settings": {
+        "index": "php"
+      },
+      "tables-basic": "php",
+      "tables-datatable": "php",
+      "tables-editable": "php",
+      "tables-responsive": "php",
+      "vendors": {},
+      "welcome_message": "php"
+    }
+  }
+}
